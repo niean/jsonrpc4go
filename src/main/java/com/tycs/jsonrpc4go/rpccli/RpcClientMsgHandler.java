@@ -1,20 +1,21 @@
-package com.tycs.jsonrpc4go;
+package com.tycs.jsonrpc4go.rpccli;
 
+import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
-import com.tycs.jsonrpc4go.service.RpcClientService;
-
 public class RpcClientMsgHandler extends SimpleChannelHandler {
 
-    private RpcClientService rpcClientService;
+    final static Logger logger = Logger.getLogger("RpcClientMsgHandler");
 
-    public RpcClientMsgHandler(RpcClientService rpcClientService){
+    private RpcClient   rpcClient;
+
+    public RpcClientMsgHandler(RpcClient rpcClient){
         super();
-        this.rpcClientService = rpcClientService;
+        this.rpcClient = rpcClient;
     }
 
     @Override
@@ -24,30 +25,30 @@ public class RpcClientMsgHandler extends SimpleChannelHandler {
 
     @Override
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
-        rpcClientService.setChannel(ctx.getChannel());
+        rpcClient.setChannel(ctx.getChannel());
     }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-        System.out.println("recv from svr:" + (String) e.getMessage());
-        //ctx.getChannel().close();
+        logger.debug("recv from svr:" + (String) e.getMessage());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+        logger.fatal(e.getCause());
         e.getCause().printStackTrace();
         ctx.getChannel().close();
     }
 
     @Override
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
-        System.out.println("Disconnected from: " + ctx.getChannel().getRemoteAddress());
+        logger.warn("Disconnected from: " + ctx.getChannel().getRemoteAddress());
     }
 
     @Override
     public void channelClosed(final ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         // 意外断开重连
-        System.out.println("channelClosed:" + ctx.getName());
-        rpcClientService.retryConnect();
+        logger.error("channelClosed:" + ctx.getName());
+        rpcClient.retryConnect();
     }
 }

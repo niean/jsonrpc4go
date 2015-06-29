@@ -1,20 +1,16 @@
-package com.tycs.jsonrpc4go.model;
+package com.tycs.jsonrpc4go.test;
 
-import java.io.Serializable;
+public class FalconItem {
 
-public class FalconItemObject implements Serializable {
+    String  endpoint;
+    String  metric;
+    Long    timestamp;
+    Integer step;
+    Double  value;
+    String  counterType;
+    String  tags;
 
-    private static final long serialVersionUID = 3907675238752866317L;
-
-    String                    endpoint;
-    String                    metric;
-    Long                      timestamp;
-    Integer                   step;
-    Double                    value;
-    String                    counterType;
-    String                    tags;
-
-    public FalconItemObject(String e, String m, Long ts, Integer step, double d, String type, String tags){
+    public FalconItem(String e, String m, Long ts, Integer step, double d, String type, String tags){
         this.endpoint = e;
         this.metric = m;
         this.timestamp = ts;

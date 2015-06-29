@@ -1,16 +1,13 @@
 package com.tycs.jsonrpc4go.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonRpcObject implements Serializable {
+public class JsonRpcObject {
 
-    private static final long serialVersionUID = 2263979655023414003L;
-
-    List<Object>              params;
-    String                    method;
-    Object                    id;
+    List<Object> params;
+    String       method;
+    Object       id;
 
     public JsonRpcObject(String method, Object params, Object id){
         super();
